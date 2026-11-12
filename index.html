@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17202a">
+<title>🔥 Apaga el Fuego 3.3 - Modo Infinito</title>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#1b2935;--blue:#168bd2;--orange:#ff8a25;--green:#20a568}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#263c4d,#101820 65%);font-family:system-ui,Arial,sans-serif;color:#f7fafc;display:flex;justify-content:center;padding:18px;transition:background .4s}
+body.secret-theme{background:radial-gradient(circle at top,#3d1635,#0c0712 70%)}
+body.infinite-theme{background:radial-gradient(circle at top,#11323b,#0a151b 70%)}
+.game{width:min(100%,680px);margin:auto}
+header{text-align:center;margin-bottom:16px}
+h1{font-size:clamp(2rem,7vw,3.2rem);margin:8px 0;color:#ff9b36;text-shadow:0 3px 0 #7a310d;cursor:pointer;user-select:none;transition:transform .15s, color .3s}
+h1:active{transform:scale(.97)}
+body.secret-theme h1{color:#e066ff;text-shadow:0 3px 0 #570a6e}
+body.infinite-theme h1{color:#38bdf8;text-shadow:0 3px 0 #0369a1}
+.subtitle{color:#c7d4df;margin:0}
+.panel{background:rgba(27,41,53,.96);border:1px solid #3b5264;border-radius:20px;padding:18px;box-shadow:0 14px 35px #0005;margin:14px 0;transition:border-color .3s, background .3s}
+body.secret-theme .panel{background:rgba(33,16,41,.96);border-color:#78288c}
+body.infinite-theme .panel{background:rgba(15,31,41,.96);border-color:#0284c7}
+.scene{min-height:190px;border-radius:16px;background:linear-gradient(#263b4b,#17232c);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+body.secret-theme .scene{background:linear-gradient(#3b1847,#17091f)}
+body.infinite-theme .scene{background:linear-gradient(#163a4d,#0d1c24)}
+.scene:after{content:"";position:absolute;bottom:0;left:0;right:0;height:27px;background:#344a38}
+.house{font-size:clamp(5rem,22vw,8rem);z-index:1;filter:drop-shadow(0 5px 3px #0008)}
+.flames{position:absolute;top:12px;font-size:2.2rem;animation:flicker .55s infinite alternate;z-index:2}
+@keyframes flicker{from{transform:scale(.92) rotate(-4deg)}to{transform:scale(1.12) rotate(4deg)}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:#101c26;border-radius:13px;text-align:center;padding:12px 5px}
+body.secret-theme .stat{background:#16091c}
+body.infinite-theme .stat{background:#0a1721}
+.stat strong{display:block;font-size:clamp(1.2rem,5vw,1.7rem)}
+.stat span{font-size:.82rem;color:#b9c9d5}
+.records-box{background:#101c26;border-radius:13px;padding:10px 14px;margin-top:12px;font-size:.88rem;color:#d8e4ec;border:1px dashed #3b5264}
+body.secret-theme .records-box{background:#16091c;border-color:#78288c}
+body.infinite-theme .records-box{background:#0a1721;border-color:#0284c7}
+.records-box h3{margin:0 0 6px;font-size:.95rem;color:#ffbd70;text-align:center}
+body.secret-theme .records-box h3{color:#f0a3ff}
+body.infinite-theme .records-box h3{color:#38bdf8}
+.records-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;text-align:center}
+.records-grid div{background:#17232c;padding:6px;border-radius:8px}
+body.secret-theme .records-grid div{background:#23092e}
+body.infinite-theme .records-grid div{background:#112230}
+.records-grid span{display:block;font-size:.75rem;color:#9fb3c4}
+.records-grid strong{font-size:.95rem;color:#fff}
+.message{text-align:center;font-weight:700;line-height:1.45;min-height:56px;display:grid;place-items:center;color:#ffbd70}
+body.secret-theme .message{color:#f0a3ff}
+body.infinite-theme .message{color:#38bdf8}
+h2{font-size:1.05rem;text-align:center;margin:6px 0 12px}
+.buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+button{border:0;border-radius:12px;padding:14px 10px;font-weight:800;font-size:1rem;color:white;background:linear-gradient(180deg,#249cde,#12649c);box-shadow:0 4px 0 #0b456c;cursor:pointer;touch-action:manipulation;transition:transform .08s, filter .15s}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #0b456c}
+button:disabled{opacity:.4;cursor:not-allowed}
+.player-bar{display:flex;gap:8px;margin-bottom:14px;align-items:center}
+.player-bar input{flex:1;background:#101c26;border:2px solid #3b5264;border-radius:12px;padding:12px 14px;color:#fff;font-size:.98rem;font-weight:700;outline:none;transition:border-color .2s}
+.player-bar input:focus{border-color:#ff9b36}
+body.secret-theme .player-bar input{background:#16091c;border-color:#78288c}
+body.infinite-theme .player-bar input{background:#0a1721;border-color:#0284c7}
+.diff-group{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.levels-group{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.diff-btn,.lvl-btn{padding:10px 6px;font-size:.88rem;background:#101c26;border:2px solid #3b5264;box-shadow:none;color:#c7d4df}
+.diff-btn.active,.lvl-btn.active{background:linear-gradient(180deg,#26465e,#183042);border-color:#ff9b36;color:#fff;box-shadow:0 0 12px #ff9b3644}
+body.secret-theme .lvl-btn.active{background:linear-gradient(180deg,#4c1661,#2a0938);border-color:#e066ff;box-shadow:0 0 12px #d946ef55}
+body.infinite-theme .lvl-btn.active{background:linear-gradient(180deg,#0f4c75,#1b263b);border-color:#38bdf8;box-shadow:0 0 12px #0284c755}
+.diff-btn.infinite-btn{background:linear-gradient(180deg,#0f3c5e,#091f33);border-color:#0284c7;color:#bae6fd}
+.diff-btn.infinite-btn.active{background:linear-gradient(180deg,#0284c7,#0369a1);border-color:#38bdf8;color:#fff;box-shadow:0 0 15px #0284c788}
+.diff-btn.secret-btn{display:none;background:linear-gradient(180deg,#3d144f,#23092e);border-color:#b833e0;color:#f7c6ff}
+.diff-btn.secret-btn.unlocked{display:block}
+.diff-btn.secret-btn.active{background:linear-gradient(180deg,#6c1c8c,#3b0a4f);border-color:#f285ff;color:#fff;box-shadow:0 0 15px #d946ef88}
+.diff-btn small,.lvl-btn small{display:block;font-size:.72rem;font-weight:600;color:#9fb3c4;margin-top:2px}
+.diff-btn.infinite-btn small{color:#7dd3fc}
+.start-btn{width:100%;background:linear-gradient(180deg,#ff9b36,#d96b14);box-shadow:0 4px 0 #8a3f06;margin-bottom:14px;font-size:1.1rem}
+body.secret-theme .start-btn{background:linear-gradient(180deg,#c026d3,#86198f);box-shadow:0 4px 0 #4a044e}
+body.infinite-theme .start-btn{background:linear-gradient(180deg,#0284c7,#0369a1);box-shadow:0 4px 0 #075985}
+.reset{width:100%;background:linear-gradient(180deg,#2dbb7b,#168451);box-shadow:0 4px 0 #0c5634;margin-top:14px}
+.sound{width:100%;margin-top:10px;background:linear-gradient(180deg,#687b8d,#405465);box-shadow:0 4px 0 #293a48}
+.hint{text-align:center;color:#aebdca;font-size:.86rem;margin:12px 0 0}
+.log{font-size:.9rem;color:#c9d6df;min-height:24px;text-align:center}
+.progress-wrap{margin-top:14px;background:#101c26;border-radius:13px;padding:12px}
+body.secret-theme .progress-wrap{background:#16091c}
+body.infinite-theme .progress-wrap{background:#0a1721}
+.progress-top{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;color:#d8e4ec;margin-bottom:8px}
+.progress-track{height:13px;background:#344653;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#20a568,#7cdb72);border-radius:99px;transition:width .25s}
+body.infinite-theme .progress-fill{background:linear-gradient(90deg,#38bdf8,#818cf8)}
+.clue{background:#3a2e1c;border:1px solid #80602e;border-radius:13px;padding:12px;text-align:center;color:#ffe0a3;font-weight:700;margin:12px 0;line-height:1.4}
+body.secret-theme .clue{background:#2d1238;border-color:#9333ea;color:#f5d0fe}
+body.infinite-theme .clue{background:#0c2333;border-color:#0284c7;color:#bae6fd}
+.ranking-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.9rem}
+.ranking-table th{color:#9fb3c4;font-weight:700;text-align:left;padding:8px 10px;border-bottom:1px solid #3b5264;font-size:.8rem}
+.ranking-table td{padding:9px 10px;border-bottom:1px solid #263847}
+.ranking-table tr:last-child td{border-bottom:none}
+.ranking-table tr.is-current{background:rgba(255,155,54,.14);font-weight:800}
+body.secret-theme .ranking-table tr.is-current{background:rgba(224,102,255,.16)}
+body.infinite-theme .ranking-table tr.is-current{background:rgba(56,189,248,.16)}
+.rank-badge{display:inline-block;min-width:26px;font-weight:800}
+.clear-rank{margin-top:10px;width:100%;padding:8px;font-size:.8rem;background:#101c26;border:1px solid #3b5264;box-shadow:none;color:#9fb3c4}
+.clear-rank:hover{color:#ff8080;border-color:#ff8080}
+.io-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.io-btn{background:#101c26;border:1px solid #0284c7;color:#38bdf8;box-shadow:none;font-size:.82rem;padding:8px}
+.io-btn:hover{background:#0c2333}
+@media(min-width:560px){.buttons{grid-template-columns:repeat(5,minmax(0,1fr))}.panel{padding:22px}}
+@media(max-width:420px){.diff-group{grid-template-columns:1fr}.levels-group{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:380px){.stats{gap:6px}.stat{padding:10px 2px}.stat span{font-size:.72rem}}
+</style>
+</head>
+<body>
+<main class="game">
+<header>
+  <h1 id="gameTitle" title="¿Habrá algún secreto escondido acá?">🔥 APAGA EL FUEGO 3.3 🔥</h1>
+  <p class="subtitle">¡Salvá la ciudad en el Modo Infinito!</p>
+</header>
+<section class="panel">
+  <div class="scene" aria-label="Casa en llamas">
+    <div class="flames" id="flames">🔥 🔥 🔥</div>
+    <div class="house" id="house">🏠</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong id="water">💧 120</strong><span>Agua disponible</span></div>
+    <div class="stat"><strong id="fires">🔥 5</strong><span>Incendios restantes</span></div>
+    <div class="stat"><strong id="score">⭐ 0</strong><span>Puntaje</span></div>
+  </div>
+  <div class="stat" style="margin-top:10px">
+    <strong id="timer" aria-live="off">⏱️ 20 s</strong>
+    <span>Tiempo para apagar el incendio</span>
+  </div>
+  <div class="stat" style="margin-top:10px"><strong id="level">🚒 Nivel 1 · Normal</strong><span>Progreso y Modo</span></div>
+  <div class="progress-wrap">
+    <div class="progress-top"><strong>🎯 Racha de incendios</strong><span id="progressText">0 / 5 incendios</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="records-box">
+    <h3>🏆 Récords Guardados (Este Dispositivo)</h3>
+    <div class="records-grid">
+      <div><span>Mayor Puntaje</span><strong id="recScore">0 pts</strong></div>
+      <div><span>Mejor Racha / Tiempo</span><strong id="recTime">--:--</strong></div>
+    </div>
+  </div>
+</section>
+<section class="panel">
+  <h2>🧑‍🚒 Nombre del Bombero</h2>
+  <div class="player-bar">
+    <input type="text" id="playerName" maxlength="18" placeholder="Escribí tu nombre o apodo..." aria-label="Nombre del jugador">
+  </div>
+
+  <h2>🎚️ Elegí el modo de juego</h2>
+  <div class="diff-group" id="diffButtons">
+    <button class="diff-btn infinite-btn active" data-diff="infinite">🌊 Modo Infinito<small>15 s · Exacto o Game Over · +20 pts</small></button>
+    <button class="diff-btn" data-diff="normal">🟡 Normal<small>20 s · Clásico · +15 pts</small></button>
+    <button class="diff-btn" data-diff="hard">🔴 Extremo<small>12 s · Difícil · +25 pts</small></button>
+    <button class="diff-btn secret-btn" id="secretBtn" data-diff="secret">🟣 Infierno Matemático<small>7 s · Potencias · +50 pts</small></button>
+  </div>
+
+  <button class="start-btn" id="startBtn">▶️ INICIAR TIMER Y JUGAR</button>
+  <div class="message" id="message" role="status" aria-live="polite">Escribí tu nombre y tocá "Iniciar timer y jugar".</div>
+  <div class="clue" id="clue">🧠 La cuenta aparecerá cuando inicies el juego.</div>
+  <h2>💦 ¿Cuánta agua querés utilizar?</h2>
+  <div class="buttons" id="waterButtons">
+    <button data-amount="10" disabled>💧 10 L</button>
+    <button data-amount="15" disabled>💧 15 L</button>
+    <button data-amount="20" disabled>💧 20 L</button>
+    <button data-amount="25" disabled>💧 25 L</button>
+    <button data-amount="30" disabled>💧 30 L</button>
+  </div>
+  <button class="sound" id="soundToggle" aria-pressed="true">🔊 Sonido: activado</button>
+  <button class="reset" id="reset">🔄 REINICIAR JUEGO (R)</button>
+  <p class="hint" id="hintText">Atajos: R reinicia el juego.</p>
+</section>
+
+<section class="panel">
+  <h2>🔥 Tabla de Mejores Partidas (Modo Infinito)</h2>
+  <table class="ranking-table" aria-label="Ranking de mejores partidas en Modo Infinito">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Bombero</th>
+        <th style="text-align:right">♾️ Mejor Racha</th>
+        <th style="text-align:right">⭐ Mejor Puntaje</th>
+      </tr>
+    </thead>
+    <tbody id="infiniteRankingBody"></tbody>
+  </table>
+  <div class="io-buttons">
+    <button class="io-btn" id="exportInfBtn" type="button">📤 Exportar Mi Récord</button>
+    <button class="io-btn" id="importInfBtn" type="button">📥 Importar Partida / Récord</button>
+  </div>
+  <button class="clear-rank" id="clearInfRankBtn" type="button">🗑️ Reiniciar tabla de récords</button>
+</section>
+
+<section class="panel"><h2>📜 Última acción</h2><div class="log" id="log">¡A trabajar, bombero!</div></section>
+</main>
+<script>
+(() => {
+  const DIFFICULTIES = {
+    infinite: { label: 'Modo Infinito',      time: 15, ops: ['+', '−', '×', '÷'],           points: 20, infiniteWater: true },
+    normal:   { label: 'Normal',              time: 20, ops: ['+', '−', '×', '÷'],           points: 15, infiniteWater: false },
+    hard:     { label: 'Extremo',             time: 12, ops: ['+', '−', '×', '÷'],           points: 25, infiniteWater: false },
+    secret:   { label: 'Infierno Matemático', time: 7,  ops: ['pow', 'sqrt', '×', '÷'],      points: 50, infiniteWater: false }
+  };
+
+  let currentDiff = 'infinite';
+  let secretUnlocked = false;
+  let titleClicks = 0;
+  let titleClickTimer = null;
+
+  let water, fires, score, fireNeed, fireQueue, fireEquation, over, started, level, totalFires, clearedFires, soundOn = true, audioCtx;
+  let timeLeft = DIFFICULTIES[currentDiff].time, timerInterval = null;
+  let runStartTime = 0;
+
+  const $ = id => document.getElementById(id);
+
+  let savedData = { score: 0, time: 999999 };
+  let infiniteLeaderboard = {};
+  let lastPlayerName = 'Bombero 1';
+
+  try {
+    const raw = localStorage.getItem('apaga_fuego_records');
+    if (raw) savedData = JSON.parse(raw);
+    const rawInfLb = localStorage.getItem('apaga_fuego_infinite_leaderboard');
+    if (rawInfLb) infiniteLeaderboard = JSON.parse(rawInfLb);
+    const rawName = localStorage.getItem('apaga_fuego_player');
+    if (rawName) lastPlayerName = rawName;
+  } catch(_) {}
+
+  $('playerName').value = lastPlayerName;
+
+  function saveRecords() {
+    try { localStorage.setItem('apaga_fuego_records', JSON.stringify(savedData)); } catch(_) {}
+  }
+
+  function saveInfiniteLeaderboard() {
+    try { localStorage.setItem('apaga_fuego_infinite_leaderboard', JSON.stringify(infiniteLeaderboard)); } catch(_) {}
+  }
+
+  function updateInfiniteRanking(streak, currentScore) {
+    if (streak <= 0) return;
+    const name = getActivePlayerName();
+    const key = name.toLowerCase();
+    if (!infiniteLeaderboard[key]) {
+      infiniteLeaderboard[key] = { name, streak: 0, score: 0 };
+    }
+    infiniteLeaderboard[key].name = name;
+    if (streak > infiniteLeaderboard[key].streak) {
+      infiniteLeaderboard[key].streak = streak;
+    }
+    if (currentScore > infiniteLeaderboard[key].score) {
+      infiniteLeaderboard[key].score = currentScore;
+    }
+    saveInfiniteLeaderboard();
+    renderInfiniteLeaderboard();
+  }
+
+  function getActivePlayerName() {
+    const clean = $('playerName').value.trim();
+    return clean || 'Bombero Anónimo';
+  }
+
+  function renderInfiniteLeaderboard() {
+    const tbody = $('infiniteRankingBody');
+    const currentKey = getActivePlayerName().toLowerCase();
+    const entries = Object.values(infiniteLeaderboard).sort((a, b) => {
+      if (b.streak !== a.streak) return b.streak - a.streak;
+      return b.score - a.score;
+    }).slice(0, 10);
+
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#9fb3c4;padding:14px">Todavía no hay rachas en Modo Infinito. ¡Jugá para marcar el primer récord!</td></tr>';
+      return;
+    }
+
+    const medals = ['🥇', '🥈', '🥉'];
+    tbody.innerHTML = entries.map((entry, idx) => {
+      const badge = medals[idx] || `#${idx + 1}`;
+      const isMe = entry.name.toLowerCase() === currentKey;
+      const safeName = entry.name.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+      return `<tr class="${isMe ? 'is-current' : ''}">
+        <td><span class="rank-badge">${badge}</span></td>
+        <td>${safeName}${isMe ? ' (vos)' : ''}</td>
+        <td style="text-align:right"><strong>🔥 ${entry.streak}</strong></td>
+        <td style="text-align:right">⭐ ${entry.score}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function formatTime(sec) {
+    if (sec >= 999999) return '--:--';
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  function updateRecordsUI() {
+    $('recScore').textContent = `${savedData.score} pts`;
+    $('recTime').textContent = formatTime(savedData.time);
+  }
+
+  function makeEquation(answer) {
+    const operations = DIFFICULTIES[currentDiff].ops;
+    const operation = operations[Math.floor(Math.random() * operations.length)];
+
+    if (operation === 'pow') {
+      const bases = [2, 3, 4, 5];
+      const base = bases[Math.floor(Math.random() * bases.length)];
+      const exp = base <= 3 ? (Math.random() < 0.5 ? 2 : 3) : 2;
+      const powerVal = Math.pow(base, exp);
+      const sup = exp === 2 ? '²' : '³';
+      if (powerVal === answer) return `${base}${sup} = ?`;
+      if (powerVal < answer) return `${base}${sup} + ${answer - powerVal} = ?`;
+      return `${base}${sup} − ${powerVal - answer} = ?`;
+    }
+
+    if (operation === 'sqrt') {
+      if (Math.random() < 0.65) return `√${answer * answer} = ?`;
+      const root = Math.floor(Math.random() * 6) + 2;
+      const sq = root * root;
+      if (root < answer) return `√${sq} + ${answer - root} = ?`;
+      return `√${(answer + 3) * (answer + 3)} − 3 = ?`;
+    }
+
+    if (operation === '+') {
+      const first = Math.floor(Math.random() * (answer - 1)) + 1;
+      return `${first} + ${answer - first} = ?`;
+    }
+    if (operation === '−') {
+      const second = Math.floor(Math.random() * 20) + 1;
+      return `${answer + second} − ${second} = ?`;
+    }
+    if (operation === '×') {
+      const factors = [];
+      for (let i = 2; i <= Math.sqrt(answer); i++) {
+        if (answer % i === 0) factors.push([i, answer / i]);
+      }
+      if (factors.length) {
+        const pair = factors[Math.floor(Math.random() * factors.length)];
+        return `${pair[0]} × ${pair[1]} = ?`;
+      }
+      return `1 × ${answer} = ?`;
+    }
+
+    const divisor = Math.floor(Math.random() * 9) + 2;
+    return `${answer * divisor} ÷ ${divisor} = ?`;
+  }
+
+  function tone(freq, duration, type = 'sine', volume = 0.07, delay = 0) {
+    if (!soundOn) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      audioCtx = audioCtx || new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + delay);
+      osc.stop(audioCtx.currentTime + delay + duration);
+    } catch (_) {}
+  }
+
+  function soundSuccess() {
+    tone(520,.13,'triangle',.08,0);
+    tone(740,.18,'triangle',.08,.14);
+  }
+
+  function soundFail() { tone(190,.28,'sawtooth',.055,0); }
+  function soundLevel() {
+    tone(440,.12,'triangle',.07,0);
+    tone(554,.12,'triangle',.07,.13);
+    tone(659,.22,'triangle',.07,.26);
+  }
+  function soundSecret() {
+    tone(330,.1,'sawtooth',.07,0);
+    tone(440,.1,'sawtooth',.07,.1);
+    tone(554,.1,'sawtooth',.07,.2);
+    tone(659,.15,'sawtooth',.08,.3);
+    tone(880,.28,'triangle',.09,.42);
+  }
+
+  function unlockSecretMode() {
+    if (secretUnlocked) return;
+    secretUnlocked = true;
+    $('secretBtn').classList.add('unlocked');
+    currentDiff = 'secret';
+    soundSecret();
+    reset();
+    $('message').textContent = '🔮 ¡MODO SECRETO DESBLOQUEADO! Infierno Matemático.';
+  }
+
+  function update() {
+    const cfg = DIFFICULTIES[currentDiff];
+    document.body.classList.toggle('secret-theme', currentDiff === 'secret');
+    document.body.classList.toggle('infinite-theme', currentDiff === 'infinite');
+
+    $('water').textContent = `💧 ${water}`;
+    $('fires').textContent = currentDiff === 'infinite' ? `♾️ Racha: ${clearedFires}` : `🔥 ${fires}`;
+    $('score').textContent = `⭐ ${score}`;
+    $('timer').textContent = `⏱️ ${timeLeft} s`;
+    $('timer').style.color = timeLeft <= 3 ? '#ff5555' : (timeLeft <= 5 ? '#ff7777' : '#f7fafc');
+    $('level').textContent = `🚒 ${cfg.label}`;
+    $('progressText').textContent = currentDiff === 'infinite' ? `${clearedFires} incendios seguidos` : `${clearedFires} / ${totalFires} incendios`;
+    $('progressFill').style.width = currentDiff === 'infinite' ? `${(clearedFires % 10) * 10}%` : `${totalFires ? (clearedFires / totalFires) * 100 : 0}%`;
+
+    if (over) {
+      $('clue').textContent = '🏁 Partida terminada. Tocá Reiniciar para volver a jugar.';
+    } else if (!started) {
+      $('clue').textContent = '🧠 Tocá "Iniciar timer y jugar" para ver la cuenta.';
+    } else {
+      $('clue').textContent = `🧠 Desafío: resolvé la cuenta para descubrir cuántos litros necesita el incendio: ${fireEquation}`;
+    }
+
+    document.querySelectorAll('[data-amount]').forEach(btn => {
+      btn.disabled = !started || over || Number(btn.dataset.amount) > water;
+    });
+
+    document.querySelectorAll('[data-diff]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.diff === currentDiff);
+      btn.disabled = started && !over;
+    });
+
+    $('playerName').disabled = started && !over;
+    $('startBtn').disabled = started && !over;
+    $('flames').style.display = 'block';
+    $('flames').textContent = currentDiff === 'secret' ? '🔮 🔥 🔮' : (currentDiff === 'infinite' ? '🌊 🔥 🌊' : '🔥 🔥 🔥');
+    $('house').textContent = '🏠';
+    updateRecordsUI();
+    renderInfiniteLeaderboard();
+  }
+
+  function stopTimer() {
+    if (timerInterval !== null) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function startTimer() {
+    stopTimer();
+    timeLeft = DIFFICULTIES[currentDiff].time;
+    update();
+    timerInterval = setInterval(() => {
+      if (over || !started) { stopTimer(); return; }
+      timeLeft--;
+      update();
+      if (timeLeft <= 0) {
+        stopTimer();
+        over = true;
+        $('message').textContent = '⏰ ¡Se terminó el tiempo! El incendio sigue encendido. ¡Game Over!';
+        soundFail();
+        update();
+      }
+    }, 1000);
+  }
+
+  function startGame() {
+    if (started || over) return;
+    started = true;
+    runStartTime = Date.now();
+    try { localStorage.setItem('apaga_fuego_player', getActivePlayerName()); } catch(_) {}
+    $('message').textContent = `🎯 ¡Vamos ${getActivePlayerName()}! El desafío comenzó.`;
+    $('log').textContent = '¡Comenzó la cuenta regresiva!';
+    soundSuccess();
+    startTimer();
+  }
+
+  function endGame() {
+    stopTimer();
+    over = true;
+    const totalSecsElapsed = Math.floor((Date.now() - runStartTime) / 1000);
+    if (score > savedData.score) {
+      savedData.score = score;
+      saveRecords();
+    }
+    $('message').textContent = `💔 PARTIDA FINALIZADA. Conseguiste ${score} puntos y apagaste ${clearedFires} incendios.`;
+    soundFail();
+    update();
+  }
+
+  function nextInfiniteFire() {
+    clearedFires++;
+    fires = 1;
+    water = 120;
+    const earned = DIFFICULTIES[currentDiff].points;
+    score += earned;
+    updateInfiniteRanking(clearedFires, score);
+    fireNeed = (Math.floor(Math.random() * 5) + 2) * 5;
+    fireEquation = makeEquation(fireNeed);
+    startTimer();
+    $('message').textContent = `🌊 ¡Incendio apagado en Modo Infinito! (+${earned} pts) · ¡Siguiente fuego!`;
+    $('log').textContent = `Racha actual: ${clearedFires} incendios apagados. Tanque recargado a 120 L.`;
+    soundSuccess();
+    update();
+  }
+
+  function useWater(amount) {
+    if (!started || over || amount > water) return;
+    water -= amount;
+    if (currentDiff === 'infinite') {
+      if (amount === fireNeed) {
+        nextInfiniteFire();
+      } else {
+        $('log').textContent = `Elegiste ${amount} L pero el incendio necesitaba exactamente ${fireNeed} L.`;
+        endGame();
+      }
+      return;
+    }
+    if (amount >= fireNeed) {
+      fires--;
+      clearedFires++;
+      const earned = DIFFICULTIES[currentDiff].points;
+      score += earned;
+      $('message').textContent = `💧 ¡Incendio apagado! (+${earned} pts)`;
+      $('log').textContent = `¡Apagaste un incendio! Te quedan ${fires}.`;
+      soundSuccess();
+      if (fires === 0) { endGame(); return; }
+      fireNeed = (Math.floor(Math.random() * 5) + 2) * 5;
+      fireEquation = makeEquation(fireNeed);
+      startTimer();
+    } else {
+      $('message').textContent = '❌ ¡No alcanzó el agua! Probá con más.';
+      $('log').textContent = 'El fuego sigue encendido. ¡Intentá de nuevo!';
+      soundFail();
+    }
+    update();
+    if (water === 0 && fires > 0 && currentDiff !== 'infinite') endGame();
+  }
+
+  function reset() {
+    stopTimer();
+    water = 120;
+    fires = currentDiff === 'infinite' ? 1 : 5;
+    totalFires = fires;
+    clearedFires = 0;
+    score = 0;
+    timeLeft = DIFFICULTIES[currentDiff].time;
+    fireNeed = (Math.floor(Math.random() * 5) + 2) * 5;
+    fireEquation = makeEquation(fireNeed);
+    over = false;
+    started = false;
+    $('message').textContent = `Modo ${DIFFICULTIES[currentDiff].label} listo. Tocá "Iniciar timer y jugar".`;
+    $('log').textContent = '¡Listo para empezar!';
+    update();
+  }
+
+  // Exportar / Importar Récords Infinitos
+  $('exportInfBtn').addEventListener('click', () => {
+    const name = getActivePlayerName();
+    const key = name.toLowerCase();
+    const myRecord = infiniteLeaderboard[key] || { name, streak: clearedFires, score };
+    const exportData = JSON.stringify(myRecord);
+    
+    navigator.clipboard.writeText(exportData).then(() => {
+      alert(`📤 ¡Código de récord copiado al portapapeles para "${name}"!\n\nRacha: ${myRecord.streak} | Puntos: ${myRecord.score}\n\nPodés pegarlo en otra cuenta o dispositivo usando "Importar Partida".`);
+    }).catch(() => {
+      prompt("Copiá este código de tu récord:", exportData);
+    });
+  });
+
+  $('importInfBtn').addEventListener('click', () => {
+    const inputData = prompt("📥 Pegá aquí el código o datos JSON de la partida/récord a importar:");
+    if (!inputData) return;
+    try {
+      const parsed = JSON.parse(inputData.trim());
+      if (typeof parsed.streak === 'number' && typeof parsed.score === 'number' && parsed.name) {
+        const key = parsed.name.toLowerCase();
+        infiniteLeaderboard[key] = {
+          name: parsed.name,
+          streak: Math.max(parsed.streak, infiniteLeaderboard[key]?.streak || 0),
+          score: Math.max(parsed.score, infiniteLeaderboard[key]?.score || 0)
+        };
+        saveInfiniteLeaderboard();
+        renderInfiniteLeaderboard();
+        alert(`🎉 ¡Récord de "${parsed.name}" (${parsed.streak} incendios) importado con éxito a la tabla!`);
+      } else {
+        alert("❌ El código ingresado no tiene un formato válido de récord.");
+      }
+    } catch(e) {
+      alert("❌ Error al leer el código. Asegurate de pegar un texto JSON válido.");
+    }
+  });
+
+  $('playerName').addEventListener('input', () => {
+    try { localStorage.setItem('apaga_fuego_player', getActivePlayerName()); } catch(_) {}
+    renderInfiniteLeaderboard();
+  });
+
+  $('clearInfRankBtn').addEventListener('click', () => {
+    if (confirm('¿Seguro que querés borrar todos los datos de la tabla de récords?')) {
+      infiniteLeaderboard = {};
+      saveInfiniteLeaderboard();
+      renderInfiniteLeaderboard();
+    }
+  });
+
+  $('gameTitle').addEventListener('click', () => {
+    titleClicks++;
+    clearTimeout(titleClickTimer);
+    titleClickTimer = setTimeout(() => { titleClicks = 0; }, 1500);
+    if (titleClicks >= 5) {
+      titleClicks = 0;
+      unlockSecretMode();
+    }
+  });
+
+  let keyBuffer = '';
+  document.addEventListener('keydown', e => {
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    if (e.key.toLowerCase() === 'r') {
+      reset();
+      return;
+    }
+    keyBuffer = (keyBuffer + e.key.toLowerCase()).slice(-5);
+    if (keyBuffer === 'fuego') {
+      keyBuffer = '';
+      unlockSecretMode();
+    }
+  });
+
+  $('diffButtons').addEventListener('click', e => {
+    const btn = e.target.closest('[data-diff]');
+    if (!btn || (started && !over)) return;
+    currentDiff = btn.dataset.diff;
+    tone(600, .08, 'sine', .05);
+    reset();
+  });
+
+  $('startBtn').addEventListener('click', startGame);
+  $('waterButtons').addEventListener('click', e => {
+    const btn = e.target.closest('[data-amount]');
+    if (btn) useWater(Number(btn.dataset.amount));
+  });
+  $('soundToggle').addEventListener('click', () => {
+    soundOn = !soundOn;
+    $('soundToggle').textContent = soundOn ? '🔊 Sonido: activado' : '🔇 Sonido: desactivado';
+    $('soundToggle').setAttribute('aria-pressed', String(soundOn));
+  });
+  $('reset').addEventListener('click', reset);
+
+  reset();
+})();
+</script>
+</body>
+</html>
